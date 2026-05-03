@@ -391,6 +391,231 @@ RoboGauge 评估时用 **9 种不同的域随机化配置（M=9）**对同一个
 
 ---
 
+## 10. 代码仓库分析（go2_rl_gym）
+
+> 基于实际代码 `go2_rl_gym-master/` 的逐文件分析
+
+### 10.1 仓库结构
+
+```
+go2_rl_gym-master/
+├── legged_gym/                       # 环境代码（1426行基类，重度修改自原始框架）
+│   ├── envs/base/
+│   │   ├── legged_robot.py           #   1426行，融合 turn_over / 动态σ / 指令课程
+│   │   │                             #   / PD随机化 / 执行器随机化 / 延迟等新功能
+│   │   └── legged_robot_config.py    #   407行，新增 CTS/MoE 等配置基类
+│   ├── envs/go2/
+│   │   ├── go2_env.py                #   Go2 专用：重写观测(45维) + 新 reward
+│   │   ├── go2_config.py             #   完整版配置 (论文主打)
+│   │   ├── go2_config_vanilla.py     #   简化版 (接近原始 legged_gym)
+│   │   ├── go2_config_vanilla_with_dynamic_cmd.py
+│   │   └── go2_config_fast_flat_move.py  # 高速平地专用
+│   ├── envs/__init__.py              #   注册 7 个 task
+│   ├── scripts/train.py              #   训练入口 (仅23行)
+│   └── utils/
+│       ├── exporter.py               #   新增：导出 JIT/ONNX 模型
+│       └── isaacgym_utils.py         #   新增：Isaac Gym 工具函数
+│
+├── rsl_rl/                           #   自带的 RL 算法库
+│   ├── modules/
+│   │   ├── actor_critic.py           #   原始单 Actor-Critic
+│   │   ├── actor_critic_cts.py       #   CTS (Teacher-Student)
+│   │   ├── actor_critic_moe_cts.py   #   MoE-CTS (论文主打)
+│   │   ├── actor_critic_moe_ng_cts.py
+│   │   ├── actor_critic_ac_moe_cts.py
+│   │   ├── actor_critic_mcp_cts.py
+│   │   ├── actor_critic_dual_moe_cts.py
+│   │   └── utils.py                  #   MoE/Experts/Gating/StudentMoEEncoder 实现
+│   ├── algorithms/
+│   │   ├── ppo.py                    #   原始 PPO
+│   │   ├── cts.py                    #   CTS 算法
+│   │   ├── moe_cts.py                #   MoE-CTS 算法 (论文主打)
+│   │   ├── moe_ng_cts.py
+│   │   ├── ac_moe_cts.py
+│   │   ├── mcp_cts.py
+│   │   └── dual_moe_cts.py
+│   ├── storage/                      #   含 RolloutStorageCTS
+│   └── runners/
+│       ├── on_policy_runner.py       #   原始 runner + 导出功能
+│       └── on_policy_runner_cts.py   #   CTS runner
+│
+├── resources/robots/go2/             #   Go2 URDF + 7个 mesh 文件
+├── deploy/                           #   部署代码
+│   ├── deploy_mujoco/                #   MuJoCo 评估 (= RoboGauge 评估套件)
+│   ├── deploy_real/                  #   真机部署 (Unitree Go2)
+│   └── pre_train/go2/                #   预训练模型
+├── tools/                            #   辅助脚本
+└── setup.py
+```
+
+### 10.2 MoE 核心代码实现
+
+MoE 在 `rsl_rl/modules/utils.py` 中由三个类组成：
+
+**① MLP** (通用多层感知机)
+```python
+class MLP(nn.Module):
+    def __init__(self, dims, activation='elu', last_activation=False):
+        # dims = [input_dim, h1, h2, ..., output_dim]
+        # 中间层自动插入激活函数，最后一层默认无激活
+```
+
+**② Experts** (专家组)
+```python
+class Experts(nn.Module):
+    # backbone: 共享的 MLP → (B, expert_num × expert_hidden_dim)
+    # experts: 分组 Conv1d (groups=expert_num) → 每个专家独立输出
+    # 输出形状: (B, expert_num, output_dim)
+```
+
+**③ MoE** (门控 + 专家)
+```python
+class MoE(nn.Module):
+    def forward(self, x):
+        weights = self.gating_network(x)      # (B, expert_num), softmax
+        expert_outs = self.experts(x)          # (B, expert_num, output_dim)
+        output = sum(weights * expert_outs)    # (B, output_dim) 加权和
+        return output, weights
+```
+
+**④ StudentMoEEncoder** (学生编码器)
+```python
+class StudentMoEEncoder(nn.Module):
+    # MoE → L2Norm/SimNorm
+    # 输出归一化的 32 维隐状态
+```
+
+### 10.3 Actor-Critic MoE-CTS 网络结构
+
+`actor_critic_moe_cts.py` — 论文主打的完整网络：
+
+```
+Teacher 路径:
+  privileged_obs(263维) → MLP([263, 512, 256, 32]) → L2Norm → latent(32维)
+
+Student 路径:
+  history = 3帧 obs(45维) = 135维  # 3帧历史拼接
+  history → StudentMoEEncoder(8 experts) → latent(32维)
+            ├─ Gating(135 → ... → 8) → softmax → ω
+            ├─ Expert₁  ─┐
+            ├─ ...       ├→ Σ ω_k × Expert_k(135) → 32维 → L2Norm
+            └─ Expert₈  ─┘
+
+Actor (共享):
+  [latent(32) + obs(45)] = 77维 → MLP([77, 512, 256, 128, 12])
+
+Critic (共享):
+  [latent(32) + privileged_obs(263)] = 295维 → MLP([295, 512, 256, 128, 1])
+```
+
+**关键设计决策**：
+- Teacher 和 Student 共享 Actor 和 Critic（只有编码器不同）
+- Student 使用 **3 帧观测历史** (`history_length=3`)，即 `45×3=135` 维输入
+- Gating 网络的输入是 **history 拼接后的 135 维**，即门控基于观测历史做决策
+- 蒸馏损失：`L_latent = MSE(teacher_latent, student_latent)`
+- 负载均衡损失：`L_balance = Σ(ω̄_k − 1/K)²`
+
+### 10.4 MoE-CTS 算法的两个优化器
+
+`moe_cts.py` 使用**双优化器**设计：
+
+| 优化器 | 管理参数 | 学习率 |
+|--------|---------|--------|
+| optimizer1 | Teacher编码器 + Actor + Critic + std | 1e-3 (自适应) |
+| optimizer2 | Student MoE 编码器 | 1e-3 (独立) |
+
+**每轮更新分两步**：
+1. **RL 更新** (optimizer1)：PPO surrogate loss + value loss + entropy — 让 Actor 学会好的动作
+2. **蒸馏更新** (optimizer2)：latent loss + load_balance loss — 让 Student 编码器逼近 Teacher
+
+**CTS 的 Teacher/Student 混合机制**：
+- `teacher_env_ratio = 0.75`：75% 环境用 Teacher 做决策，25% 环境用 Student 做决策
+- Teacher 有特权信息 → 更容易做出好决策 → 产生的高质量数据同时训练两个网络
+- Student 虽然只有 proprioception，但通过蒸馏逼近 Teacher 的隐状态，间接学到特权信息
+
+### 10.5 Go2 观测空间
+
+#### Actor 观测 (45维，纯 proprioception，Sim2Real 友好)
+
+```python
+# go2_env.py compute_observations()
+base_ang_vel (3)       # 角速度（不含线速度！）
+projected_gravity (3)   # 重力方向
+commands (3)            # 速度指令
+dof_pos - default (12)  # 关节位置偏差
+dof_vel (12)            # 关节速度
+last_actions (12)       # 历史动作
+```
+
+**与原始 legged_gym 的关键区别**：去掉了 `base_lin_vel`。因为真机上速度估计不准（需要状态估计器），不让策略依赖它直接提升 Sim2Real 效果。
+
+#### Critic 特权观测 (263维，仅训练用)
+
+Actor 的 45 维 + **base_lin_vel(3)** + **足端接触力(4)** + **关节力矩(12)** + **关节加速度(12)** + **高度采样(187)**
+
+### 10.6 已注册的 7 个任务
+
+| task 参数 | 网络架构 | 论文对应 |
+|-----------|---------|---------|
+| `--task=go2` | 单一 Actor-Critic (PPO) | 原始 PPO 基线 |
+| `--task=go2_cts` | CTS (Teacher-Student) | CTS 基线 |
+| `--task=go2_moe_cts` | **MoE-CTS** | **论文主打的完整版** |
+| `--task=go2_moe_ng_cts` | MoE-No-Goal-CTS | 去掉门控消融 |
+| `--task=go2_mcp_cts` | MCP-CTS | 乘法组合消融 |
+| `--task=go2_ac_moe_cts` | AC-MoE-CTS | MoE在动作层消融 |
+| `--task=go2_dual_moe_cts` | Dual-MoE-CTS | 双重MoE消融 |
+
+### 10.7 Go2 配置关键参数
+
+| 参数 | 值 | 说明 |
+|------|-----|------|
+| `num_envs` | **8192** | 并行环境数（原始 4096 的 2 倍） |
+| `max_iterations` | **150000** | 总迭代数（不乘 num_steps_per_env） |
+| `episode_length_s` | 25 | Episode 长度 |
+| `num_observations` | 45 | Actor 观测维度 |
+| `num_privileged_obs` | 263 | Critic 特权观测维度 |
+| `latent_dim` | 32 | Teacher/Student 隐状态维度 |
+| `student_expert_num` | 8 | MoE 专家数量 |
+| `teacher_env_ratio` | 0.75 | Teacher 决策的环境比例 |
+| `load_balance_coef` | 0.01 | 负载均衡损失权重 |
+| `norm_type` | `l2norm` | 隐状态归一化方式 |
+| `history_length` | 3 | Student 观测历史帧数 |
+
+### 10.8 训练命令
+
+```bash
+# 进入代码目录
+cd go2_rl_gym-master
+
+# 安装（需先 pip uninstall legged_gym 移除旧版）
+pip install -e .
+cd rsl_rl && pip install -e . && cd ..
+
+# RTX 40 系显卡需要禁用 TorchScript JIT
+PYTORCH_JIT=0 python legged_gym/scripts/train.py --task=go2_moe_cts
+
+# 其他可选任务
+PYTORCH_JIT=0 python legged_gym/scripts/train.py --task=go2           # 原始 PPO
+PYTORCH_JIT=0 python legged_gym/scripts/train.py --task=go2_cts       # CTS 基线
+```
+
+### 10.9 与原始 legged_gym 的代码差异总结
+
+| 改动点 | 原始 legged_gym | go2_rl_gym |
+|--------|----------------|-----------|
+| `legged_robot.py` 行数 | ~900 | **1426** |
+| `legged_robot_config.py` 行数 | ~240 | **407** |
+| 观测组成 | 含 base_lin_vel | **不含** base_lin_vel |
+| 域随机化项数 | 3 | **10** |
+| 网络架构 | 1种 (Actor-Critic) | **7种** (PPO/CTS/MoE/...) |
+| 算法文件 | 1个 (ppo.py) | **7个** |
+| 指令采样 | 均匀随机 | **课程 + 极端 + 动态** |
+| tracking_sigma | 固定 0.25 | **动态**（地形+指令相关） |
+| reward curriculum | 无 | **有**（部分 reward 系数随时间变化） |
+| turn_over 恢复 | 无 | **有**（摔倒翻转后自动恢复） |
+
+---
+
 ## 总结
 
 RoboGauge 论文在 legged_gym 基础上做了三个层次的创新：
