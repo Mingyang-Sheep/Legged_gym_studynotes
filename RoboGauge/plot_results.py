@@ -65,52 +65,49 @@ plt.tight_layout()
 plt.savefig(Path(__file__).parent / 'benchmark_terrain_scores.png', dpi=150, bbox_inches='tight')
 
 # ============================================================
-# 图 2: 8 项指标汇总
+# 图 2: 8 项指标汇总（水平柱状图，避免标签重叠）
 # ============================================================
-fig, ax = plt.subplots(figsize=(10, 5))
+fig, ax = plt.subplots(figsize=(10, 6))
 
-metric_labels = {
-    'lin_vel_err': 'Lin Vel Track',
-    'ang_vel_err': 'Ang Vel Track',
-    'dof_power': 'DOF Power',
-    'dof_limits': 'DOF Limits',
-    'orientation_stability': 'Orientation',
-    'torque_smoothness': 'Torque Smooth',
-    'friction_margin': 'Friction Margin',
-    'zmp_margin': 'ZMP Margin',
-}
+metric_labels = [
+    ('lin_vel_err',           'Lin Vel Track'),
+    ('ang_vel_err',           'Ang Vel Track'),
+    ('dof_power',             'DOF Power'),
+    ('dof_limits',            'DOF Limits'),
+    ('orientation_stability', 'Orientation'),
+    ('torque_smoothness',     'Torque Smooth'),
+    ('friction_margin',       'Friction Margin'),
+    ('zmp_margin',            'ZMP Margin'),
+]
 
 summary = data['summary']
-metrics = list(metric_labels.keys())
-metric_names = [metric_labels[m] for m in metrics]
+metric_names = [m[1] for m in metric_labels]
+metrics = [m[0] for m in metric_labels]
 
 means = [summary[m]['mean'] for m in metrics]
 mean50s = [summary[m]['mean@50'] for m in metrics]
 
-x = np.arange(len(metrics))
-width = 0.35
+y = np.arange(len(metrics))
+height = 0.3
 
-bars1 = ax.bar(x - width/2, means, width, label='Mean (all commands)', color='#90CAF9', edgecolor='white')
-bars2 = ax.bar(x + width/2, mean50s, width, label='Mean@50 (worst 50%)', color='#1565C0', edgecolor='white')
+ax.barh(y + height/2, means, height, label='Mean (all commands)', color='#90CAF9', edgecolor='white')
+bars = ax.barh(y - height/2, mean50s, height, label='Mean@50 (worst 50%)', color='#1565C0', edgecolor='white')
 
-ax.set_xticks(x)
-ax.set_xticklabels(metric_names, fontsize=9, rotation=15, ha='right')
-ax.set_ylim(0, 0.75)
-ax.set_ylabel('Score', fontsize=11)
+ax.set_yticks(y)
+ax.set_yticklabels(metric_names, fontsize=10)
+ax.set_xlim(0, 0.80)
+ax.set_xlabel('Score', fontsize=11)
 ax.set_title('Per-Metric Summary (across all terrains)', fontsize=13, fontweight='bold')
-ax.legend(fontsize=9)
-ax.yaxis.grid(True, alpha=0.3)
+ax.legend(loc='lower right', fontsize=9)
+ax.xaxis.grid(True, alpha=0.3)
+ax.invert_yaxis()
 
-for bar in bars1:
-    h = bar.get_height()
-    ax.text(bar.get_x() + bar.get_width()/2, h + 0.005, f'{h:.3f}',
-            ha='center', va='bottom', fontsize=7)
-for bar in bars2:
-    h = bar.get_height()
-    ax.text(bar.get_x() + bar.get_width()/2, h + 0.005, f'{h:.3f}',
-            ha='center', va='bottom', fontsize=7)
+# 在柱子上清晰标注数值
+for i, (m_val, m50_val) in enumerate(zip(means, mean50s)):
+    ax.text(m_val + 0.008, i + height/2, f'{m_val:.3f}', va='center', fontsize=8, color='#555555')
+    ax.text(m50_val + 0.008, i - height/2, f'{m50_val:.3f}', va='center', fontsize=8, color='#FFFFFF', fontweight='bold')
 
-plt.tight_layout()
+fig.subplots_adjust(left=0.18, right=0.95, top=0.93, bottom=0.08)
 plt.savefig(Path(__file__).parent / 'benchmark_metrics_summary.png', dpi=150, bbox_inches='tight')
 
 # ============================================================
