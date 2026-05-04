@@ -7,7 +7,7 @@ RoboGauge Stress Benchmark 结果可视化
 import yaml
 import numpy as np
 import matplotlib
-matplotlib.use('TkAgg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from pathlib import Path
 import matplotlib.ticker as mticker
@@ -21,7 +21,7 @@ with open(RESULT_FILE, 'r') as f:
 # ============================================================
 # 图 1: Radar + Bar —— 7 地形对比
 # ============================================================
-terrain_names = ['Flat', 'Obstacle', 'Slope↓', 'Slope↑', 'Stairs↓', 'Stairs↑', 'Wave']
+terrain_names = ['Flat', 'Obstacle', 'Slope Down', 'Slope Up', 'Stairs Down', 'Stairs Up', 'Wave']
 terrain_keys = ['flat', 'obstacle', 'slope_bd', 'slope_fd', 'stairs_bd', 'stairs_fd', 'wave']
 
 scores = [data['scores'][k] for k in terrain_keys]
@@ -148,7 +148,7 @@ for ax_i, (tkey, ttitle) in enumerate(zip(fric_terrains, fric_titles)):
     ax.set_yticks([0, 2, 4, 6, 8, 10])
     ax.grid(True, alpha=0.3)
 
-fig.suptitle(f'Max Terrain Level vs Friction — go2_moe_cts @ iter 5500\n(Benchmark Score: {benchmark:.3f})',
+fig.suptitle(f'Max Terrain Level vs Friction -- go2_moe_cts @ iter 5500\n(Benchmark Score: {benchmark:.3f})',
              fontsize=14, fontweight='bold', y=1.01)
 plt.tight_layout()
 plt.savefig(Path(__file__).parent / 'benchmark_friction_levels.png', dpi=150, bbox_inches='tight')
@@ -159,4 +159,4 @@ print(f"\nCharts saved:")
 print(f"  {Path(__file__).parent / 'benchmark_terrain_scores.png'}")
 print(f"  {Path(__file__).parent / 'benchmark_metrics_summary.png'}")
 print(f"  {Path(__file__).parent / 'benchmark_friction_levels.png'}")
-plt.show()
+plt.close('all')

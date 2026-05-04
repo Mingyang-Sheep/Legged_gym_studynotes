@@ -315,6 +315,8 @@ python robogauge/scripts/run.py \
 | **stairs_bd** (下楼梯) | 0.243 | 弱，最高 Level 4 |
 | **stairs_fd** (上楼梯) | 0.213 | 最弱，最高 Level 4 |
 
+![七地形雷达图 + 柱状图](benchmark_terrain_scores.png)
+
 ### 6.3 摩擦 vs 最高难度
 
 ```
@@ -328,6 +330,8 @@ obstacle            X    6    8    7    8    7    8    6    6
 ```
 
 规律：所有地形随摩擦增大难度级别升高（符合预期），楼梯仍是瓶颈。
+
+![摩擦 vs 最高难度级别](benchmark_friction_levels.png)
 
 ### 6.4 八项指标汇总（全地形平均）
 
@@ -343,6 +347,8 @@ obstacle            X    6    8    7    8    7    8    6    6
 | zmp_margin | 0.572 | 0.546 |
 
 Mean@50（最差 50% 命令的均值）在各指标上都低于全局均值，说明挑战性命令（急停、对角线速度等）确实暴露了策略的不足。角度跟踪误差 (ang_vel_err) 的差距最大（0.469 vs 0.408），说明急速转向是当前策略的短板。
+
+![八项指标汇总](benchmark_metrics_summary.png)
 
 ### 6.5 结论
 
