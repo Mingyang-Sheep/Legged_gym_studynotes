@@ -1,0 +1,79 @@
+2026-05-04 14:48:59 - INFO - logger.py:118 - Logs saved at: /home/fenglab/lmy/RL/RoboGauge/logs/go2_moe_stress_go2_moe_5500_stress/20260504-14-48-59_run/stdout.log
+2026-05-04 14:48:59 - INFO - stress_pipeline.py:122 - 🚀 Starting Stress Benchmark for 'go2_moe_stress_go2_moe_5500_stress'.
+2026-05-04 14:48:59 - INFO - stress_pipeline.py:123 - 🔢 Seeds: [0, 1, 2], Level Search Seeds: [0, 1, 2, 3, 4]
+2026-05-04 14:48:59 - INFO - stress_pipeline.py:125 - 🌄 Stress Test Terrain Names: ['flat', 'slope_fd', 'slope_bd', 'stairs_fd', 'stairs_bd', 'wave', 'obstacle']
+2026-05-04 14:56:33 - INFO - stress_pipeline.py:167 - ✅ Stress Benchmark Completed.
+2026-05-04 14:56:33 - INFO - stress_pipeline.py:172 - 📊 Aggregating Stress Benchmark Results...
+2026-05-04 14:56:33 - INFO - stress_pipeline.py:186 - 
+==================== Stress Benchmark Summary ====================
+       Seeds           [0, 1, 2]    Level Search Seeds [0, 1, 2, 3, 4]
+    Terrain Name       Base Mass      Friction       Max Level   
+        flat               0             0.2           None      
+        flat               0             0.3           None      
+        flat               0             0.4           None      
+        flat               0             0.5           None      
+        flat               0             0.6           None      
+        flat               0             0.7           None      
+        flat               0             0.8           None      
+        flat               0             0.9           None      
+        flat               0             1.0           None      
+      obstacle             0             0.2             ❌       
+      obstacle             0             0.3             6       
+      obstacle             0             0.4             8       
+      obstacle             0             0.5             7       
+      obstacle             0             0.6             8       
+      obstacle             0             0.7             7       
+      obstacle             0             0.8             8       
+      obstacle             0             0.9             6       
+      obstacle             0             1.0             6       
+      slope_bd             0             0.2             ❌       
+      slope_bd             0             0.3             2       
+      slope_bd             0             0.4             3       
+      slope_bd             0             0.5             5       
+      slope_bd             0             0.6             7       
+      slope_bd             0             0.7             8       
+      slope_bd             0             0.8             9       
+      slope_bd             0             0.9            10       
+      slope_bd             0             1.0            10       
+      slope_fd             0             0.2             ❌       
+      slope_fd             0             0.3             ❌       
+      slope_fd             0             0.4             2       
+      slope_fd             0             0.5             4       
+      slope_fd             0             0.6             6       
+      slope_fd             0             0.7             8       
+      slope_fd             0             0.8             9       
+      slope_fd             0             0.9             9       
+      slope_fd             0             1.0            10       
+     stairs_bd             0             0.2             1       
+     stairs_bd             0             0.3             3       
+     stairs_bd             0             0.4             3       
+     stairs_bd             0             0.5             4       
+     stairs_bd             0             0.6             4       
+     stairs_bd             0             0.7             4       
+     stairs_bd             0             0.8             4       
+     stairs_bd             0             0.9             3       
+     stairs_bd             0             1.0             4       
+     stairs_fd             0             0.2             2       
+     stairs_fd             0             0.3             3       
+     stairs_fd             0             0.4             2       
+     stairs_fd             0             0.5             4       
+     stairs_fd             0             0.6             4       
+     stairs_fd             0             0.7             3       
+     stairs_fd             0             0.8             3       
+     stairs_fd             0             0.9             3       
+     stairs_fd             0             1.0             3       
+        wave               0             0.2             2       
+        wave               0             0.3             3       
+        wave               0             0.4             4       
+        wave               0             0.5             6       
+        wave               0             0.6             7       
+        wave               0             0.7             8       
+        wave               0             0.8             8       
+        wave               0             0.9             9       
+        wave               0             1.0             9       
+==================================================================
+2026-05-04 14:56:33 - INFO - stress_pipeline.py:244 - ✅ Stress benchmark aggregated execution finished.
+2026-05-04 14:56:33 - INFO - stress_pipeline.py:245 - 📁 Stress benchmark results saved to: /home/fenglab/lmy/RL/RoboGauge/logs/go2_moe_stress_go2_moe_5500_stress/20260504-14-48-59_run/stress_benchmark_results.yaml
+2026-05-04 14:56:33 - INFO - file_utils.py:18 - 📦 Compressing logs: subtasks -> subtasks.tar.xz ...
+2026-05-04 14:56:38 - INFO - file_utils.py:18 - ✅ Compression finished: /home/fenglab/lmy/RL/RoboGauge/logs/go2_moe_stress_go2_moe_5500_stress/20260504-14-48-59_run/subtasks.tar.xz
+2026-05-04 14:56:39 - INFO - file_utils.py:18 - 🗑️ Deleted original directory: /home/fenglab/lmy/RL/RoboGauge/logs/go2_moe_stress_go2_moe_5500_stress/20260504-14-48-59_run/subtasks

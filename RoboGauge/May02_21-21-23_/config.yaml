@@ -1,0 +1,526 @@
+env_cfg:
+  asset:
+    angular_damping: 0.0
+    armature: 0.0
+    collapse_fixed_joints: true
+    default_dof_drive_mode: 3
+    density: 0.001
+    disable_gravity: false
+    file: '{LEGGED_GYM_ROOT_DIR}/resources/robots/go2/urdf/go2.urdf'
+    fix_base_link: false
+    flip_visual_attachments: true
+    foot_name: foot
+    linear_damping: 0.0
+    max_angular_velocity: 1000.0
+    max_linear_velocity: 1000.0
+    name: go2
+    penalize_contacts_on:
+    - thigh
+    - calf
+    replace_cylinder_with_capsule: true
+    self_collisions: 0
+    terminate_after_contacts_on:
+    - base
+    thickness: 0.01
+  commands:
+    command_range_curriculum:
+    - ang_vel_yaw:
+      - -2.0
+      - 2.0
+      heading:
+      - -1.57
+      - 1.57
+      iter: 50000
+      lin_vel_x:
+      - -2.0
+      - 2.0
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    - ang_vel_yaw:
+      - -1.5
+      - 1.5
+      heading:
+      - -1.57
+      - 1.57
+      iter: 20000
+      lin_vel_x:
+      - -1.0
+      - 1.0
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    dynamic_resample_commands: true
+    heading_command: false
+    limit_ang_vel_at_zero_command_prob: 0.2
+    limit_vel:
+      ang_vel_yaw:
+      - -1
+      - 0
+      - 1
+      lin_vel_x:
+      - -1
+      - 1
+      lin_vel_y:
+      - -1
+      - 1
+    limit_vel_invert_when_continuous: true
+    limit_vel_prob: 0.2
+    num_commands: 4
+    ranges:
+      ang_vel_yaw:
+      - -1.0
+      - 1.0
+      heading:
+      - -1.57
+      - 1.57
+      lin_vel_x:
+      - -0.5
+      - 0.5
+      lin_vel_y:
+      - -0.5
+      - 0.5
+    resampling_time: 5.0
+    stop_heading_at_limit: true
+    terrain_max_command_ranges:
+    - ang_vel_yaw:
+      - -1.5
+      - 1.5
+      heading:
+      - -1.57
+      - 1.57
+      lin_vel_x:
+      - -1.5
+      - 1.5
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    - ang_vel_yaw:
+      - -1.5
+      - 1.5
+      heading:
+      - -1.57
+      - 1.57
+      lin_vel_x:
+      - -1.5
+      - 1.5
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    - ang_vel_yaw:
+      - -1.5
+      - 1.5
+      heading:
+      - -1.57
+      - 1.57
+      lin_vel_x:
+      - -1.5
+      - 1.5
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    - ang_vel_yaw:
+      - -1.5
+      - 1.5
+      heading:
+      - -1.57
+      - 1.57
+      lin_vel_x:
+      - -1.0
+      - 1.0
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    - ang_vel_yaw:
+      - -1.5
+      - 1.5
+      heading:
+      - -1.57
+      - 1.57
+      lin_vel_x:
+      - -1.0
+      - 1.0
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    - ang_vel_yaw:
+      - -1.5
+      - 1.5
+      heading:
+      - -1.57
+      - 1.57
+      lin_vel_x:
+      - -1.0
+      - 1.0
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    - ang_vel_yaw:
+      - -1.5
+      - 1.5
+      heading:
+      - -1.57
+      - 1.57
+      lin_vel_x:
+      - -1.0
+      - 1.0
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    - ang_vel_yaw:
+      - -1.5
+      - 1.5
+      heading:
+      - -1.57
+      - 1.57
+      lin_vel_x:
+      - -1.0
+      - 1.0
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    - ang_vel_yaw:
+      - -2.0
+      - 2.0
+      heading:
+      - -1.57
+      - 1.57
+      lin_vel_x:
+      - -2.0
+      - 2.0
+      lin_vel_y:
+      - -1.0
+      - 1.0
+    turn_over_zero_time:
+      backflip: 5.0
+      sideflip: 3.0
+    zero_command_curriculum:
+      end_iter: 1500
+      end_value: 0.1
+      start_iter: 0
+      start_value: 0.0
+  control:
+    action_scale: 0.25
+    control_type: P
+    damping:
+      joint: 0.5
+    decimation: 4
+    stiffness:
+      joint: 20.0
+  domain_rand:
+    added_base_com_range:
+    - -0.03
+    - 0.03
+    added_mass_range:
+    - -1.0
+    - 1.0
+    damping_multiplier_range:
+    - 0.9
+    - 1.1
+    friction_range:
+    - 0.0
+    - 2.0
+    max_push_ang_vel: 0.6
+    max_push_vel_xy: 0.4
+    motor_strength_range:
+    - 0.8
+    - 1.2
+    motor_zero_offset_range:
+    - -0.035
+    - 0.035
+    multiplied_link_mass_range:
+    - 0.9
+    - 1.1
+    push_interval: 201.0
+    push_interval_s: 4
+    push_robots: true
+    randomize_action_delay: true
+    randomize_base_com: true
+    randomize_base_mass: true
+    randomize_friction: true
+    randomize_link_mass: true
+    randomize_motor_strength: true
+    randomize_motor_zero_offset: true
+    randomize_pd_gains: true
+    randomize_restitution: true
+    restitution_range:
+    - 0.0
+    - 0.5
+    robot_properties_update: null
+    stiffness_multiplier_range:
+    - 0.9
+    - 1.1
+  env:
+    env_spacing: 3.0
+    episode_length_s: 25
+    num_actions: 12
+    num_envs: 8192
+    num_observations: 45
+    num_privileged_obs: 263
+    send_timeouts: true
+    test: false
+  init_member_classes: {}
+  init_state:
+    ang_vel:
+    - 0.0
+    - 0.0
+    - 0.0
+    default_joint_angles:
+      FL_calf_joint: -1.5
+      FL_hip_joint: 0.1
+      FL_thigh_joint: 0.8
+      FR_calf_joint: -1.5
+      FR_hip_joint: -0.1
+      FR_thigh_joint: 0.8
+      RL_calf_joint: -1.5
+      RL_hip_joint: 0.1
+      RL_thigh_joint: 1.0
+      RR_calf_joint: -1.5
+      RR_hip_joint: -0.1
+      RR_thigh_joint: 1.0
+    lin_vel:
+    - 0.0
+    - 0.0
+    - 0.0
+    pos:
+    - 0.0
+    - 0.0
+    - 0.42
+    rot:
+    - 0.0
+    - 0.0
+    - 0.0
+    - 1.0
+    turn_over: false
+    turn_over_init_heights:
+      backflip:
+      - 0.1
+      - 0.15
+      sideflip:
+      - 0.16
+      - 0.21
+    turn_over_proportions:
+    - 0.0
+    - 0.2
+    - 0.8
+  noise:
+    add_noise: true
+    noise_level: 1.0
+    noise_scales:
+      ang_vel: 0.2
+      dof_pos: 0.01
+      dof_vel: 1.5
+      gravity: 0.05
+      height_measurements: 0.1
+      lin_vel: 0.1
+  normalization:
+    clip_actions: 100.0
+    clip_observations: 100.0
+    obs_scales:
+      ang_vel: 0.25
+      dof_pos: 1.0
+      dof_vel: 0.05
+      height_measurements: 2.5
+      lin_vel: 2.0
+  rewards:
+    base_height_target: 0.38
+    curriculum_rewards:
+    - end_iter: 1500
+      end_value: 0.0
+      reward_name: lin_vel_z
+      start_iter: 0
+      start_value: 1.0
+    - end_iter: 5000
+      end_value: 10.0
+      reward_name: correct_base_height
+      start_iter: 0
+      start_value: 1.0
+    dynamic_sigma:
+      max_ang_vel: 2.0
+      max_lin_vel: 1.5
+      max_sigma:
+      - 0.4166666666666667
+      - 0.25
+      - 0.25
+      - 0.5
+      - 0.5
+      - 0.75
+      - 1
+      - 1
+      - 0.25
+      min_ang_vel: 1.0
+      min_lin_vel: 0.5
+    max_contact_force: 147.0
+    min_legs_distance: 0.1
+    only_positive_rewards: false
+    scales:
+      action_rate: -0.01
+      action_smoothness: -0.01
+      ang_vel_xy: -0.05
+      collision: -1.0
+      correct_base_height: -1.0
+      dof_acc: -2.5e-07
+      dof_pos_limits: -2.0
+      dof_power: -2.0e-05
+      feet_regulation: -0.05
+      hip_to_default: -0.05
+      lin_vel_z: -2.0
+      torques: -0.0001
+      tracking_ang_vel: 0.5
+      tracking_lin_vel: 1.0
+    soft_dof_pos_limit: 0.9
+    soft_dof_vel_limit: 1.0
+    soft_torque_limit: 1.0
+    tracking_sigma: 0.25
+    turn_over_roll_threshold: 0.7853981633974483
+    turn_over_scales:
+      upright: 1.0
+  seed: 0
+  sim:
+    dt: 0.005
+    gravity:
+    - 0.0
+    - 0.0
+    - -9.81
+    physx:
+      bounce_threshold_velocity: 0.5
+      contact_collection: 2
+      contact_offset: 0.01
+      default_buffer_size_multiplier: 5
+      max_depenetration_velocity: 1.0
+      max_gpu_contact_pairs: 8388608
+      num_position_iterations: 4
+      num_threads: 10
+      num_velocity_iterations: 0
+      rest_offset: 0.0
+      solver_type: 1
+    substeps: 1
+    up_axis: 1
+  terrain:
+    border_size: 25
+    curriculum: true
+    dynamic_friction: 1.0
+    horizontal_scale: 0.1
+    max_init_terrain_level: 5
+    measure_heights: true
+    measured_points_x:
+    - -0.8
+    - -0.7
+    - -0.6
+    - -0.5
+    - -0.4
+    - -0.3
+    - -0.2
+    - -0.1
+    - 0.0
+    - 0.1
+    - 0.2
+    - 0.3
+    - 0.4
+    - 0.5
+    - 0.6
+    - 0.7
+    - 0.8
+    measured_points_y:
+    - -0.5
+    - -0.4
+    - -0.3
+    - -0.2
+    - -0.1
+    - 0.0
+    - 0.1
+    - 0.2
+    - 0.3
+    - 0.4
+    - 0.5
+    mesh_type: trimesh
+    move_down_by_accumulated_xy_command: true
+    num_cols: 20
+    num_rows: 10
+    num_sub_terrains: 200
+    restitution: 0.0
+    selected: false
+    slope_threshold: 1.5
+    static_friction: 1.0
+    terrain_kwargs: null
+    terrain_length: 8.0
+    terrain_proportions:
+    - 0.05
+    - 0.2
+    - 0.05
+    - 0.25
+    - 0.1
+    - 0.2
+    - 0.0
+    - 0.0
+    - 0.15
+    terrain_spacing: 0.5
+    terrain_width: 8.0
+    vertical_scale: 0.005
+  viewer:
+    lookat:
+    - 11.0
+    - 5
+    - 3.0
+    pos:
+    - 10
+    - 0
+    - 6
+    ref_env: 0
+train_cfg:
+  algorithm:
+    clip_param: 0.2
+    desired_kl: 0.01
+    entropy_coef: 0.01
+    gamma: 0.99
+    lam: 0.95
+    learning_rate: 0.001
+    load_balance_coef: 0.01
+    max_grad_norm: 1.0
+    num_learning_epochs: 5
+    num_mini_batches: 4
+    schedule: adaptive
+    student_encoder_learning_rate: 0.001
+    teacher_env_ratio: 0.75
+    use_clipped_value_loss: true
+    value_loss_coef: 1.0
+  history_length: 5
+  init_member_classes: {}
+  policy:
+    activation: elu
+    actor_hidden_dims:
+    - 512
+    - 256
+    - 128
+    critic_hidden_dims:
+    - 512
+    - 256
+    - 128
+    expert_num: 8
+    init_noise_std: 1.0
+    latent_dim: 32
+    norm_type: l2norm
+    student_encoder_hidden_dims:
+    - 512
+    - 256
+    - 256
+    teacher_encoder_hidden_dims:
+    - 512
+    - 256
+  robogauge:
+    enabled: false
+    port: 9973
+  runner:
+    algorithm_class_name: MoECTS
+    checkpoint: -1
+    experiment_name: go2_moe_cts
+    load_run: -1
+    max_iterations: 150000
+    num_steps_per_env: 24
+    policy_class_name: ActorCriticMoECTS
+    resume: false
+    resume_path: null
+    run_name: ''
+    save_interval: 500
+  runner_class_name: OnPolicyRunnerCTS
+  seed: 0

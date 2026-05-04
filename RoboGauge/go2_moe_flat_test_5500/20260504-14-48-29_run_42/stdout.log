@@ -1,0 +1,15 @@
+2026-05-04 14:48:29 - INFO - logger.py:118 - Logs saved at: /home/fenglab/lmy/RL/RoboGauge/logs/go2_moe_flat_test_5500/20260504-14-48-29_run_42/stdout.log
+2026-05-04 14:48:29 - INFO - base_robot.py:29 - Loading robot model from '/home/fenglab/lmy/RL/go2_rl_gym/logs/go2_moe_cts/May03_12-19-00_/policy_jit_5500.pt'
+2026-05-04 14:48:29 - INFO - base_gauge.py:72 - Initialized Gauge with Goals 🎯 and Metrics 📊:
+  - Diagonal Velocity Goal: {'cmd_duration': 6.0, 'enabled': True}
+  - Max Velocity Goal: {'enabled': True, 'end_stance': True, 'move_duration': 5.0, 'stance_duration': 2.0}
+  - Metric: ang_vel_err
+  - Metric: dof_limits
+  - Metric: dof_power
+  - Metric: friction_margin
+  - Metric: lin_vel_err
+  - Metric: orientation_stability
+  - Metric: torque_smoothness
+  - Metric: visualization
+  - Metric: zmp_margin
+2026-05-04 14:48:29 - INFO - base_pipeline.py:66 - 🚀 Starting single run: run_42

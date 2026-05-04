@@ -1,0 +1,49 @@
+2026-05-04 14:48:37 - INFO - logger.py:118 - Logs saved at: /home/fenglab/lmy/RL/RoboGauge/logs/go2_moe_flat_test_5500/20260504-14-48-37_run_42/stdout.log
+2026-05-04 14:48:37 - INFO - base_robot.py:29 - Loading robot model from '/home/fenglab/lmy/RL/go2_rl_gym/logs/go2_moe_cts/May03_12-19-00_/policy_jit_5500.pt'
+2026-05-04 14:48:37 - INFO - base_gauge.py:72 - Initialized Gauge with Goals 🎯 and Metrics 📊:
+  - Diagonal Velocity Goal: {'cmd_duration': 6.0, 'enabled': True}
+  - Max Velocity Goal: {'enabled': True, 'end_stance': True, 'move_duration': 5.0, 'stance_duration': 2.0}
+  - Metric: ang_vel_err
+  - Metric: dof_limits
+  - Metric: dof_power
+  - Metric: friction_margin
+  - Metric: lin_vel_err
+  - Metric: orientation_stability
+  - Metric: torque_smoothness
+  - Metric: visualization
+  - Metric: zmp_margin
+2026-05-04 14:48:37 - INFO - base_pipeline.py:66 - 🚀 Starting single run: run_42
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:157 - Scaled geom friction by factor: 1.000
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:519 - 
+Robot XML: /home/fenglab/lmy/RL/RoboGauge/resources/robots/go2/go2.xml
+Robot joint names: ['FL_hip_joint', 'FL_thigh_joint', 'FL_calf_joint', 'FR_hip_joint', 'FR_thigh_joint', 'FR_calf_joint', 'RL_hip_joint', 'RL_thigh_joint', 'RL_calf_joint', 'RR_hip_joint', 'RR_thigh_joint', 'RR_calf_joint']
+==================== XML SENSOR NAMES ====================
+Joint Position Sensors [12]: ['FL_hip_pos', 'FL_thigh_pos', 'FL_calf_pos', 'FR_hip_pos', 'FR_thigh_pos', 'FR_calf_pos', 'RL_hip_pos', 'RL_thigh_pos', 'RL_calf_pos', 'RR_hip_pos', 'RR_thigh_pos', 'RR_calf_pos']
+Joint Velocity Sensors [12]: ['FL_hip_vel', 'FL_thigh_vel', 'FL_calf_vel', 'FR_hip_vel', 'FR_thigh_vel', 'FR_calf_vel', 'RL_hip_vel', 'RL_thigh_vel', 'RL_calf_vel', 'RR_hip_vel', 'RR_thigh_vel', 'RR_calf_vel']
+Joint Effort Sensors [12]: ['FL_hip_torque', 'FL_thigh_torque', 'FL_calf_torque', 'FR_hip_torque', 'FR_thigh_torque', 'FR_calf_torque', 'RL_hip_torque', 'RL_thigh_torque', 'RL_calf_torque', 'RR_hip_torque', 'RR_thigh_torque', 'RR_calf_torque']
+Actuators [12]: ['FL_hip', 'FL_thigh', 'FL_calf', 'FR_hip', 'FR_thigh', 'FR_calf', 'RL_hip', 'RL_thigh', 'RL_calf', 'RR_hip', 'RR_thigh', 'RR_calf']
+IMU Sensors: Quat['go2/imu_quat'], AngVel['go2/imu_gyro'], Acc['go2/imu_acc'], Pos['go2/frame_pos'], LinVel['go2/frame_vel']
+!!!Checkout actuators order is consistent with joint sensors!!!
+==========================================================
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:736 - Dynamics preprocessing: robot_bodies=18, dynamic_bodies=13, foot_bodies=4, default_diagonal_foot_distance=0.5653
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:895 - Proprioception shapes:
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:896 -   joint.pos: (12,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:897 -   joint.vel: (12,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:898 -   joint.torque: (12,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:900 -   base.pos: (3,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:901 -   base.quat: (4,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:902 -   base.vel: (3,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:903 -   base.ang_vel: (3,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:905 -   imu.quat: (4,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:906 -   imu.ang_vel: (3,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:907 -   imu.acc: (3,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:908 -   imu.pos: (3,)
+2026-05-04 14:48:37 - INFO - mujoco_simulator.py:909 -   imu.lin_vel: (3,)
+2026-05-04 14:48:37 - INFO - base_pipeline.py:72 - Sim FPS: 500.00, Control FPS: 50.00, Frame Skip: 10
+2026-05-04 14:48:37 - INFO - base_pipeline.py:73 - Running pipeline...
+2026-05-04 14:48:37 - INFO - base_gauge.py:116 - New Goal [1/2] [1/8]: 1_diagonal_velocity/lin_vel_x=-1.0_lin_vel_y=-1.0
+2026-05-04 14:48:39 - INFO - base_gauge.py:116 - New Goal [1/2] [1/8]: 1_diagonal_velocity/lin_vel_x=1.0_lin_vel_y=1.0
+2026-05-04 14:48:40 - INFO - base_gauge.py:116 - New Goal [1/2] [2/8]: 2_diagonal_velocity/lin_vel_x=-1.0_lin_vel_y=1.0
+2026-05-04 14:48:41 - INFO - base_gauge.py:116 - New Goal [1/2] [2/8]: 2_diagonal_velocity/lin_vel_x=1.0_lin_vel_y=-1.0
+2026-05-04 14:48:42 - INFO - base_gauge.py:116 - New Goal [1/2] [3/8]: 3_diagonal_velocity/lin_vel_x=-1.0
+2026-05-04 14:48:43 - INFO - base_gauge.py:116 - New Goal [1/2] [3/8]: 3_diagonal_velocity/lin_vel_x=1.0
